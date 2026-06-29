@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Highlight Extractor & Navigator</title>
+  <!-- Google Fonts for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-section">
+        <div class="logo-icon">✨</div>
+        <div class="logo-text">
+          <h1>Highlight<span>Extract</span></h1>
+          <p>Navigate and extract text annotations effortlessly</p>
+        </div>
+      </div>
+      
+      <!-- Upload area in the header -->
+      <div class="upload-header-zone" id="drop-zone">
+        <input type="file" id="file-input" accept="application/pdf" style="display: none;">
+        <label for="file-input" class="upload-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+          </svg>
+          <span>Upload PDF</span>
+        </label>
+      </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="app-workspace">
+      <!-- Sidebar (Highlights list) -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>Extracted Highlights</h2>
+          <span class="highlight-count" id="highlight-count">0 annotations</span>
+        </div>
+        
+        <!-- Highlights List -->
+        <div class="highlights-list-container">
+          <!-- Empty State -->
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon">📁</div>
+            <h3>No Highlights Loaded</h3>
+            <p>Upload a PDF with highlight annotations to inspect and navigate through its highlights.</p>
+          </div>
+          
+          <!-- Loaded highlights go here -->
+          <div class="highlights-list" id="highlights-list" style="display: none;"></div>
+        </div>
+      </aside>
+
+      <!-- PDF Viewer Area -->
+      <section class="viewer-section">
+        <!-- PDF Viewer Controls -->
+        <div class="viewer-toolbar" id="viewer-toolbar" style="display: none;">
+          <div class="toolbar-left">
+            <span class="pdf-title-display" id="pdf-title">document.pdf</span>
+          </div>
+          <div class="toolbar-center">
+            <button class="nav-btn" id="prev-page-btn" aria-label="Previous Page">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+            </button>
+            <div class="page-indicator">
+              Page <span id="current-page-num">1</span> of <span id="total-pages-count">1</span>
+            </div>
+            <button class="nav-btn" id="next-page-btn" aria-label="Next Page">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+            </button>
+          </div>
+          <div class="toolbar-right">
+            <button class="zoom-btn" id="zoom-out-btn" title="Zoom Out">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+            </button>
+            <span class="zoom-level" id="zoom-level-text">100%</span>
+            <button class="zoom-btn" id="zoom-in-btn" title="Zoom In">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Render Container -->
+        <div class="pdf-container-wrapper" id="pdf-container-wrapper">
+          <div class="loading-overlay" id="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>Processing and rendering PDF...</p>
+          </div>
+          
+          <div class="pdf-viewport-container" id="pdf-viewport-container" style="display: none;">
+            <!-- Canvas where PDF.js will render the page -->
+            <canvas id="pdf-canvas"></canvas>
+            <!-- Overlay element where visual highlight boxes will be positioned -->
+            <div class="highlight-overlay-layer" id="highlight-overlay-layer"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Load PDF.js from Cloudflare CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <!-- Main application script -->
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
